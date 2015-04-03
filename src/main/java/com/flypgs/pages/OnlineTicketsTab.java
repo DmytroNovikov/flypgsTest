@@ -1,5 +1,6 @@
 package com.flypgs.pages;
 
+import jquery.DatePicker;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
@@ -8,8 +9,6 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.LoadableComponent;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -236,7 +235,7 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
     public void setDepartureDate(LocalDate date){
         if(date.compareTo(LocalDate.now()) >= 0) {
             departureDate.click();
-            jquery.Calendar.setDate(driver, date);
+            DatePicker.setDate(driver, date);
         }
     }
 
@@ -248,7 +247,7 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
         if(getRoundTrip()){
             if(date.compareTo(getDepartureDate()) >= 0){
                 driver.findElement(By.cssSelector(cssReturnDateValue)).click();
-                jquery.Calendar.setDate(driver, date);
+                DatePicker.setDate(driver, date);
             }
         }
     }

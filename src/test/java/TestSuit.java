@@ -9,10 +9,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.service.DriverService;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.concurrent.TimeUnit;
@@ -100,7 +98,6 @@ public class TestSuit {
     public void testCase001() throws ParseException {
         HomePage hp = new HomePage(driver);
         hp.get();
-
         String language = "English";
         if(!hp.getCurrentLanguage().equals(language)){
             assertTrue(language + " is not in the list of the site's languages.",
@@ -109,27 +106,35 @@ public class TestSuit {
             assertTrue("Can't set " + language + " as a site's language.",
                     hp.getCurrentLanguage().contains(language));
         }
-
         OnlineTicketsTab ott = new OnlineTicketsTab(driver);
-
 /*
-        for(String city : ott.getDepCities().keySet()){
-            ott.setCityFrom(city);
-            System.out.println(city);
-            Set<String> done = null;
-            while(done == null){
-                try{
-                    done = ott.getDestCities().keySet();;
-                } catch(java.lang.NullPointerException e){
-                    //
+
+        try {
+            BufferedWriter dataFile = new BufferedWriter(
+                    new FileWriter(new File("C:\\Users\\Dmytro\\Documents\\QA\\connected_cities.csv")));
+            for(String city : ott.getDepCities().keySet()){
+                ott.setCityFrom(city);
+                java.util.Set<String> done = null;
+                while(done == null){
+                    try{
+                        done = ott.getDestCities().keySet();;
+                    } catch(java.lang.NullPointerException e){
+                        //
+                    }
                 }
+                for(String city1 : done){
+                    dataFile.write(city);
+                    dataFile.write(", ");
+                    dataFile.write(city1);
+                    dataFile.newLine();
+                }
+                //break;
             }
-            for(String city1 : done)
-                System.out.println("\t - " + city1);
-            break;
+            dataFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 */
-
         ott.setCityFrom("Lviv");
         assertEquals("Lviv", ott.getCityFrom());
         ott.setCityTo("Amsterdam");
