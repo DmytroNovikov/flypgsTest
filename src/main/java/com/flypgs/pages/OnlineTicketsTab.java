@@ -24,6 +24,10 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
 
     private final String pageUrl = "http://www.flypgs.com";
 
+    // Current language
+    @FindBy(css = "span#lang-selected")
+    WebElement currentLanguage;
+
     // From
     private static final String cssOpenFrom = "a#autodep-auto-show-all";
     private static final String cssValueFrom = "input#autodep";
@@ -66,6 +70,11 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
     @FindBy(css = "#OnlineTicket_btnOnlineTicketDevam")
     WebElement continueButton;
 
+    // Error window appeared after Continue Button pressed
+    private final String cssErrorCode = "span.errorCode";
+    private final String cssWarning = "td.warning";
+    private final String cssAfterError = "a[href='Login.jsp']";
+
     private WebDriver driver;
 
     public OnlineTicketsTab(WebDriver driver){
@@ -82,55 +91,6 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
     @Override
     protected void isLoaded() throws Error {
         assertTrue((driver.findElements(By.cssSelector(cssOpenFrom)).size() == 1));
-    }
-    public Map<String, String> getDepCities(){
-        Map<String, String> cities = new HashMap<String, String>();
-        ArrayList<Object> citiesArray =
-                (ArrayList<Object>)((JavascriptExecutor)driver).executeScript("return depData.Rows;");
-        String city, airport, data;
-        for(Object o : citiesArray){
-            data = o.toString();    // data string looks like
-                                    // "{Origin_Name=Adana, Origin_Code=ADA}"
-            city = data.split(", ")[0]; // part of the string containing city name
-            city = city.substring(13, city.length());   // 13 - city name starting position
-            airport = null;
-            Matcher m = Pattern.compile("(=\\w+\\})").matcher(data);    // searching for airport abbreviation -
-                                                                        // symbols between '=' and '}'
-            if(m.find())
-                airport = data.substring(m.start() + 1, m.end() - 1);   // abbreviation starts after '='
-                                                                        // and ends before '}'
-            cities.put(city, airport);
-        }
-        return cities;
-    }
-
-    public Map<String, String> getDestCities(){
-        if(driver.findElement(By.cssSelector(cssValueTo)).getAttribute("disabled")==null){
-            Map<String, String> cities = new HashMap<String, String>();
-            ArrayList<Object> citiesArray =
-                    (ArrayList<Object>)((JavascriptExecutor)driver).executeScript("return destData.Rows;");
-            String city, airport, data;
-            for(Object o : citiesArray){
-                data = o.toString();    // data string looks like
-                                        // {Destination_Name=Adana, Destination_CarrierCode=PC,
-                                        //  Destination_Code=ADA, Destination_Sse=F}
-                city = data.split(", ")[0]; // part of the string containing city name
-                city = city.substring(18, city.length());   // 18 - city name starting position
-                airport = null;
-                Matcher m = Pattern.compile("(Destination_Code=\\w+,)").matcher(data);  // searching for airport
-                                                                                        // abbreviation - symbols
-                                                                                        // between 'Destination_Code='
-                                                                                        // and ','
-                if(m.find())
-                    airport = data.substring(m.start() + 17, m.end() - 1);  // abbreviation starts after
-                                                                            // 'Destination_Code=' (len()=17) and ends
-                                                                            // before ','
-                cities.put(city, airport);
-            }
-            return cities;
-        }
-        else
-            return null;
     }
 
     public void setCityFrom(String city){
@@ -149,25 +109,6 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
 
     public String getCityTo(){
         return driver.findElement(By.cssSelector(cssValueTo)).getAttribute("value");
-    }
-
-    /**
-     * Emulation of city selection by scrolling the list
-     * @param cssSelector
-     * @param city
-     */
-    private void selectCityByScrolling(String cssSelector, String city){
-        driver.findElement(By.cssSelector(cssSelector)).click();
-        List<String> cities = new ArrayList<String>();
-        for(WebElement e : driver.findElements(By.cssSelector(cssCitiesList)))
-            cities.add(e.getAttribute("innerHTML"));
-        int cityPosition = cities.indexOf(city) + 1;
-        if(cityPosition > 0 ){
-            Actions builder = new Actions(driver);
-            for(int i = 0; i < cityPosition; i++)
-                builder.sendKeys(Keys.ARROW_DOWN);
-            builder.sendKeys(Keys.ENTER).perform();
-        }
     }
 
     private String xpathToItemToWait = "/html/body/ul[%data%]/li[1]/a";
@@ -202,6 +143,25 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
                 .perform();
     }
 
+    /**
+     * Emulation of city selection by scrolling the list
+     * @param cssSelector
+     * @param city
+     */
+    private void selectCityByScrolling(String cssSelector, String city){
+        driver.findElement(By.cssSelector(cssSelector)).click();
+        List<String> cities = new ArrayList<String>();
+        for(WebElement e : driver.findElements(By.cssSelector(cssCitiesList)))
+            cities.add(e.getAttribute("innerHTML"));
+        int cityPosition = cities.indexOf(city) + 1;
+        if(cityPosition > 0 ){
+            Actions builder = new Actions(driver);
+            for(int i = 0; i < cityPosition; i++)
+                builder.sendKeys(Keys.ARROW_DOWN);
+            builder.sendKeys(Keys.ENTER).perform();
+        }
+    }
+
     public void waitForDestCityEnabled(WebDriver driver) {
         (new WebDriverWait(driver, 5, 500)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
@@ -214,6 +174,7 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
         (new WebDriverWait(driver, 5, 500)).until(new ExpectedCondition<Boolean>() {
             List<WebElement> e;
             String item;
+
             public Boolean apply(WebDriver d) {
                 e = d.findElements(By.xpath(xpathToItemToWait));
                 return (e.size() > 0 && e.get(0).getText().equals(cityToWait));
@@ -235,7 +196,7 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
     public void setDepartureDate(LocalDate date){
         if(date.compareTo(LocalDate.now()) >= 0) {
             departureDate.click();
-            DatePicker.setDate(driver, date);
+            DatePicker.setDate(driver, date, currentLanguage.getText());
         }
     }
 
@@ -247,7 +208,7 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
         if(getRoundTrip()){
             if(date.compareTo(getDepartureDate()) >= 0){
                 driver.findElement(By.cssSelector(cssReturnDateValue)).click();
-                DatePicker.setDate(driver, date);
+                DatePicker.setDate(driver, date, currentLanguage.getText());
             }
         }
     }
@@ -305,7 +266,77 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
         return flexibleCheckbox.getAttribute("class").equals("input-custom-class-checkbox-active");
     }
 
-    public void pushContinueButton(){
+    public String pushContinueButton(){
+        String ok = "OK";
         continueButton.click();
+        try {
+            Alert alert = driver.switchTo().alert();
+            ok = alert.getText();
+            alert.dismiss();
+        } catch (Exception e){
+            // Nothing to do. It's not a good idea, but...
+        }
+        if(ok.equals("OK") && driver.getCurrentUrl().contains("Error")){
+            List<WebElement> e = driver.findElements(By.cssSelector(cssErrorCode));
+            if(e.size() > 0) {
+                ok = ok.concat(e.get(0).getText());
+                ok = ok.concat("\n");
+            }
+            e = driver.findElements(By.cssSelector(cssWarning));
+            if(e.size() > 0)
+                ok = ok.concat(e.get(0).getText());
+            driver.findElement(By.cssSelector(cssAfterError)).click();
+        }
+        return ok;
+    }
+
+    public Map<String, String> getDepCities(){
+        Map<String, String> cities = new HashMap<String, String>();
+        ArrayList<Object> citiesArray =
+                (ArrayList<Object>)((JavascriptExecutor)driver).executeScript("return depData.Rows;");
+        String city, airport, data;
+        for(Object o : citiesArray){
+            data = o.toString();    // data string looks like
+            // "{Origin_Name=Adana, Origin_Code=ADA}"
+            city = data.split(", ")[0]; // part of the string containing city name
+            city = city.substring(13, city.length());   // 13 - city name starting position
+            airport = null;
+            Matcher m = Pattern.compile("(=\\w+\\})").matcher(data);    // searching for airport abbreviation -
+            // symbols between '=' and '}'
+            if(m.find())
+                airport = data.substring(m.start() + 1, m.end() - 1);   // abbreviation starts after '='
+            // and ends before '}'
+            cities.put(city, airport);
+        }
+        return cities;
+    }
+
+    public Map<String, String> getDestCities(){
+        if(driver.findElement(By.cssSelector(cssValueTo)).getAttribute("disabled")==null){
+            Map<String, String> cities = new HashMap<String, String>();
+            ArrayList<Object> citiesArray =
+                    (ArrayList<Object>)((JavascriptExecutor)driver).executeScript("return destData.Rows;");
+            String city, airport, data;
+            for(Object o : citiesArray){
+                data = o.toString();    // data string looks like
+                // {Destination_Name=Adana, Destination_CarrierCode=PC,
+                //  Destination_Code=ADA, Destination_Sse=F}
+                city = data.split(", ")[0]; // part of the string containing city name
+                city = city.substring(18, city.length());   // 18 - city name starting position
+                airport = null;
+                Matcher m = Pattern.compile("(Destination_Code=\\w+,)").matcher(data);  // searching for airport
+                // abbreviation - symbols
+                // between 'Destination_Code='
+                // and ','
+                if(m.find())
+                    airport = data.substring(m.start() + 17, m.end() - 1);  // abbreviation starts after
+                // 'Destination_Code=' (len()=17) and ends
+                // before ','
+                cities.put(city, airport);
+            }
+            return cities;
+        }
+        else
+            return null;
     }
 }

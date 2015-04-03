@@ -1,6 +1,7 @@
 import com.flypgs.pages.HomePage;
 import com.flypgs.pages.OnlineTicketsTab;
 import org.junit.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -10,7 +11,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.service.DriverService;
 
 import java.io.*;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.concurrent.TimeUnit;
@@ -95,9 +95,10 @@ public class TestSuit {
     }
 
     @Test
-    public void testCase001() throws ParseException {
+    public void testCase001(){
         HomePage hp = new HomePage(driver);
         hp.get();
+        // Türkçe English Deutsch Français Русский Nederlands Dansk Italiano Svenska
         String language = "English";
         if(!hp.getCurrentLanguage().equals(language)){
             assertTrue(language + " is not in the list of the site's languages.",
@@ -107,34 +108,6 @@ public class TestSuit {
                     hp.getCurrentLanguage().contains(language));
         }
         OnlineTicketsTab ott = new OnlineTicketsTab(driver);
-/*
-
-        try {
-            BufferedWriter dataFile = new BufferedWriter(
-                    new FileWriter(new File("C:\\Users\\Dmytro\\Documents\\QA\\connected_cities.csv")));
-            for(String city : ott.getDepCities().keySet()){
-                ott.setCityFrom(city);
-                java.util.Set<String> done = null;
-                while(done == null){
-                    try{
-                        done = ott.getDestCities().keySet();;
-                    } catch(java.lang.NullPointerException e){
-                        //
-                    }
-                }
-                for(String city1 : done){
-                    dataFile.write(city);
-                    dataFile.write(", ");
-                    dataFile.write(city1);
-                    dataFile.newLine();
-                }
-                //break;
-            }
-            dataFile.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-*/
         ott.setCityFrom("Lviv");
         assertEquals("Lviv", ott.getCityFrom());
         ott.setCityTo("Amsterdam");
@@ -147,26 +120,19 @@ public class TestSuit {
         LocalDate returnDate = LocalDate.of(2015, Month.APRIL, 19);
         ott.setReturnDate(returnDate);
         assertEquals(returnDate, ott.getReturnDate());
-        ott.setAdultsCount(1);
-        assertEquals(1, ott.getAdultsCount());
+        ott.setAdultsCount(3);
+        assertEquals(3, ott.getAdultsCount());
         ott.setChildrenCount(2);
         assertEquals(2, ott.getChildrenCount());
-        ott.setInfantsCount(3);
-        assertEquals(3, ott.getInfantsCount());
+        ott.setInfantsCount(1);
+        assertEquals(1, ott.getInfantsCount());
         ott.setFlexible(true);
         assertEquals(true, ott.getFlexible());
-        //ott.pushContinueButton();
-
+        assertEquals("OK", ott.pushContinueButton());
+/*
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-/*
-        File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-        try {
-            org.apache.commons.io.FileUtils.copyFile(scrFile, new File("C:\\Users\\Dmytro\\Desktop\\scr.png"));
-        } catch (IOException e) {
             e.printStackTrace();
         }
 */
