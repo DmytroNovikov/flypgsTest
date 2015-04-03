@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11bf141b-ccfd-4501-8b75-7d14361a8252" name="Default" comment="">
-      <change type="MOVED" beforePath="C:\Users\Dmytro\Documents\QA\Projects\flypgsTest\src\main\java\jquery\Calendar.java" afterPath="$PROJECT_DIR$/src/main/java/jquery/DatePicker.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/flypgs/pages/OnlineTicketsTab.java" afterPath="$PROJECT_DIR$/src/main/java/com/flypgs/pages/OnlineTicketsTab.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/TestSuit.java" afterPath="$PROJECT_DIR$/src/test/java/TestSuit.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/connected_cities.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="flypgsTest.iws" />
@@ -532,7 +530,13 @@
       <option name="project" value="LOCAL" />
       <updated>1428041709147</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="1. jquery.Calendar.class was renamed to jquery.DatePicker.class&#10;2. Conditions in jquery.DatePicker.class were simplified.  &#10;3. data/connected_cities.csv was generated and added to project.">
+      <created>1428063334293</created>
+      <option name="number" value="00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1428063334293</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -603,7 +607,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Commit on 2015.03.25 11:42PM" />
     <MESSAGE value="I still have some problem running tests with FireFox, I have no idea, why they allways crash in IE&#10;BUT&#10; All Test Passed in Chrome!" />
-    <option name="LAST_COMMIT_MESSAGE" value="I still have some problem running tests with FireFox, I have no idea, why they allways crash in IE&#10;BUT&#10; All Test Passed in Chrome!" />
+    <MESSAGE value="1. jquery.Calendar.class was renamed to jquery.DatePicker.class&#10;2. Conditions in jquery.DatePicker.class were simplified.  &#10;3. data/connected_cities.csv was generated and added to project." />
+    <option name="LAST_COMMIT_MESSAGE" value="1. jquery.Calendar.class was renamed to jquery.DatePicker.class&#10;2. Conditions in jquery.DatePicker.class were simplified.  &#10;3. data/connected_cities.csv was generated and added to project." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
