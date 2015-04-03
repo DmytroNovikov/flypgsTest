@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11bf141b-ccfd-4501-8b75-7d14361a8252" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/connected_cities.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="flypgsTest.iws" />
@@ -536,7 +535,13 @@
       <option name="project" value="LOCAL" />
       <updated>1428063334293</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="1. jquery.Calendar.class was renamed to jquery.DatePicker.class&#10;2. Conditions in jquery.DatePicker.class were simplified.  &#10;3. data/connected_cities.csv was generated and added to project.">
+      <created>1428063562047</created>
+      <option name="number" value="00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1428063562047</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
