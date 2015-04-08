@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -26,54 +27,54 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
 
     // Current language
     @FindBy(css = "span#lang-selected")
-    WebElement currentLanguage;
+    private WebElement currentLanguage;
 
     // From
-    private static final String cssOpenFrom = "a#autodep-auto-show-all";
-    private static final String cssValueFrom = "input#autodep";
+    private static final By openFrom = By.cssSelector("a#autodep-auto-show-all");
+    private static final By valueFrom = By.cssSelector("input#autodep");
 
     // To
-    private static final String cssOpenTo = "a#autodest-auto-show-all";
-    private static final String cssValueTo = "input#autodest";
+    private static final By openTo = By.cssSelector("a#autodest-auto-show-all");
+    private static final By valueTo = By.cssSelector("input#autodest");
 
-    private static final String cssCitiesList = "li.ui-menu-item a";
+    private static final By citiesList = By.cssSelector("li.ui-menu-item a");
 
     // Round trip / One-way
     @FindBy(xpath = "//*[@id='module-online-actions']/div[2]/div[1]/table[1]/tbody/tr[3]/td/p[1]/span/a")
-    WebElement roundTripRadio;
+    private WebElement roundTripRadio;
     @FindBy(xpath = "//*[@id='module-online-actions']/div[2]/div[1]/table[1]/tbody/tr[3]/td/p[2]/span/a")
-    WebElement oneWayTripRadio;
+    private WebElement oneWayTripRadio;
 
     // Departure Date
     @FindBy(css = "input[id='linked-gidis']")
-    WebElement departureDate;
-    private static final String cssReturnDateValue = "input[id='linked-donus']";
+    private WebElement departureDate;
+    private static final By returnDateValue = By.cssSelector("input[id='linked-donus']");
 
     // Adult
     @FindBy(xpath = "//*[@id='module-online-actions']/div[2]/div[1]/table[2]/tbody/tr[1]/td[1]/div/div/div/div/div")
-    WebElement adultSelector;
+    private WebElement adultSelector;
     private static final String xpathAdultsListItems = "//*[@id='pessengerddl-adult']/option[%number%]";
     // Children (2-12)
     @FindBy(xpath = "//*[@id='module-online-actions']/div[2]/div[1]/table[2]/tbody/tr[1]/td[2]/div/div/div/div/div")
-    WebElement childrenSelector;
+    private WebElement childrenSelector;
     private static final String xpathChildrenListItems = "//*[@id='pessengerddl-child']/option[%number%]";
     // Infant (0-2)
     @FindBy(xpath = "//*[@id='module-online-actions']/div[2]/div[1]/table[2]/tbody/tr[1]/td[3]/div/div/div/div/div")
-    WebElement infantSelector;
+    private WebElement infantSelector;
     private static final String xpathInfantsListItems = "//*[@id='pessengerddl-baby']/option[%number%]";
 
     //  Are your travel dates flexible?
     @FindBy(xpath = "//*[@id='module-online-actions']/div[2]/div[2]/span/a")
-    WebElement flexibleCheckbox;
+    private WebElement flexibleCheckbox;
 
     // Continue Button
     @FindBy(css = "#OnlineTicket_btnOnlineTicketDevam")
-    WebElement continueButton;
+    private WebElement continueButton;
 
     // Error window appeared after Continue Button pressed
-    private final String cssErrorCode = "span.errorCode";
-    private final String cssWarning = "td.warning";
-    private final String cssAfterError = "a[href='Login.jsp']";
+    private final By errorCode = By.cssSelector("span.errorCode");
+    private final By warning = By.cssSelector("td.warning");
+    private final By afterError = By.cssSelector("a[href='Login.jsp']");
 
     private WebDriver driver;
 
@@ -90,29 +91,80 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
 
     @Override
     protected void isLoaded() throws Error {
-        assertTrue((driver.findElements(By.cssSelector(cssOpenFrom)).size() == 1));
+        assertTrue((driver.findElements(openFrom).size() == 1));
+    }
+
+    public String buyRoundTripTickets(String from, String to,
+                                      LocalDate departureDate, LocalDate returnDate,
+                                      int adults, int children, int infants,
+                                      boolean flexible){
+        setTheRoute(from, to);
+        setRoundTrip(true);
+        assertEquals(true, getRoundTrip());
+        setDepartureDate(departureDate);
+        assertEquals(departureDate, getDepartureDate());
+        setReturnDate(returnDate);
+        assertEquals(returnDate, getReturnDate());
+        setAdultsCount(adults);
+        assertEquals(adults, getAdultsCount());
+        setChildrenCount(children);
+        assertEquals(children, getChildrenCount());
+        setInfantsCount(infants);
+        assertEquals(infants, getInfantsCount());
+        setFlexible(flexible);
+        assertEquals(flexible, getFlexible());
+        return pushContinueButton();
+    }
+
+    public String buyOneWayTickets(String from, String to,
+                                   LocalDate departureDate,
+                                   int adults, int children, int infants,
+                                   boolean flexible){
+        setTheRoute(from, to);
+        setRoundTrip(false);
+        assertEquals(false, getRoundTrip());
+        setDepartureDate(departureDate);
+        assertEquals(departureDate, getDepartureDate());
+        setAdultsCount(adults);
+        assertEquals(adults, getAdultsCount());
+        setChildrenCount(children);
+        assertEquals(children, getChildrenCount());
+        setInfantsCount(infants);
+        assertEquals(infants, getInfantsCount());
+        setFlexible(flexible);
+        assertEquals(flexible, getFlexible());
+        return pushContinueButton();
+    }
+
+    public void setTheRoute(String from, String to){
+        setCityFrom(from);
+        assertEquals(from, getFromCity());
+        setToCity(to);
+        assertEquals(to, getToCity());
     }
 
     public void setCityFrom(String city){
         //selectCityByScrolling(cssOpenFrom, city);
-        selectCityByTyping(true, city);
+        setCity(true, city);
     }
 
-    public String getCityFrom(){
-        //return driver.findElement(By.cssSelector(cssValueFrom)).getAttribute("value");
-        return driver.findElement(By.cssSelector(cssValueFrom)).getAttribute("value");
+    public String getFromCity(){
+        //return driver.findElement(valueFrom).getAttribute("value");
+        return driver.findElement(valueFrom).getAttribute("value");
     }
 
-    public void setCityTo(String city){
-        selectCityByTyping(false, city);
+    public void setToCity(String city){
+        setCity(false, city);
     }
 
-    public String getCityTo(){
-        return driver.findElement(By.cssSelector(cssValueTo)).getAttribute("value");
+    public String getToCity(){
+        return driver.findElement(valueTo).getAttribute("value");
     }
 
     private String xpathToItemToWait = "/html/body/ul[%data%]/li[1]/a";
+    //private String xpathToItemToWait = "//*[@id='ui-active-menuitem']";
     private String cityToWait;
+
     /**
      * Emulation of city selection by typing it's name
      *
@@ -122,9 +174,9 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
      * @param departure
      * @param city
      */
-    private void selectCityByTyping(boolean departure, String city){
-        String cssSelector = departure?cssValueFrom:cssValueTo;
-        WebElement inputElement = driver.findElement(By.cssSelector(cssSelector));
+    private void setCity(boolean departure, String city){
+        By selector = departure?valueFrom:valueTo;
+        WebElement inputElement = driver.findElement(selector);
         if (!departure)
             waitForDestCityEnabled(driver);
         new Actions(driver)
@@ -143,39 +195,19 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
                 .perform();
     }
 
-    /**
-     * Emulation of city selection by scrolling the list
-     * @param cssSelector
-     * @param city
-     */
-    private void selectCityByScrolling(String cssSelector, String city){
-        driver.findElement(By.cssSelector(cssSelector)).click();
-        List<String> cities = new ArrayList<String>();
-        for(WebElement e : driver.findElements(By.cssSelector(cssCitiesList)))
-            cities.add(e.getAttribute("innerHTML"));
-        int cityPosition = cities.indexOf(city) + 1;
-        if(cityPosition > 0 ){
-            Actions builder = new Actions(driver);
-            for(int i = 0; i < cityPosition; i++)
-                builder.sendKeys(Keys.ARROW_DOWN);
-            builder.sendKeys(Keys.ENTER).perform();
-        }
-    }
-
     public void waitForDestCityEnabled(WebDriver driver) {
-        (new WebDriverWait(driver, 5, 500)).until(new ExpectedCondition<Boolean>() {
+        (new WebDriverWait(driver, 15, 500)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
-                return (d.findElement(By.cssSelector(cssValueTo)).getAttribute("disabled") == null);
+                return (d.findElement(valueTo).getAttribute("disabled") == null);
             }
         });
     }
 
     public void waitForCityInList(WebDriver driver) {
-        (new WebDriverWait(driver, 5, 500)).until(new ExpectedCondition<Boolean>() {
+        (new WebDriverWait(driver, 15, 500)).until(new ExpectedCondition<Boolean>() {
             List<WebElement> e;
             String item;
-
-            public Boolean apply(WebDriver d) {
+            public Boolean apply(WebDriver d){
                 e = d.findElements(By.xpath(xpathToItemToWait));
                 return (e.size() > 0 && e.get(0).getText().equals(cityToWait));
             }
@@ -207,14 +239,14 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
     public void setReturnDate(LocalDate date){
         if(getRoundTrip()){
             if(date.compareTo(getDepartureDate()) >= 0){
-                driver.findElement(By.cssSelector(cssReturnDateValue)).click();
+                driver.findElement(returnDateValue).click();
                 DatePicker.setDate(driver, date, currentLanguage.getText());
             }
         }
     }
 
     public LocalDate getReturnDate(){
-        return LocalDate.parse(driver.findElement(By.cssSelector(cssReturnDateValue)).getAttribute("value"),
+        return LocalDate.parse(driver.findElement(returnDateValue).getAttribute("value"),
                 DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 
@@ -277,15 +309,16 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
             // Nothing to do. It's not a good idea, but...
         }
         if(ok.equals("OK") && driver.getCurrentUrl().contains("Error")){
-            List<WebElement> e = driver.findElements(By.cssSelector(cssErrorCode));
+            List<WebElement> e = driver.findElements(errorCode);
+            ok="";
             if(e.size() > 0) {
                 ok = ok.concat(e.get(0).getText());
                 ok = ok.concat("\n");
             }
-            e = driver.findElements(By.cssSelector(cssWarning));
+            e = driver.findElements(warning);
             if(e.size() > 0)
                 ok = ok.concat(e.get(0).getText());
-            driver.findElement(By.cssSelector(cssAfterError)).click();
+            driver.findElement(afterError).click();
         }
         return ok;
     }
@@ -312,7 +345,7 @@ public class OnlineTicketsTab extends LoadableComponent<OnlineTicketsTab>{
     }
 
     public Map<String, String> getDestCities(){
-        if(driver.findElement(By.cssSelector(cssValueTo)).getAttribute("disabled")==null){
+        if(driver.findElement(valueTo).getAttribute("disabled")==null){
             Map<String, String> cities = new HashMap<String, String>();
             ArrayList<Object> citiesArray =
                     (ArrayList<Object>)((JavascriptExecutor)driver).executeScript("return destData.Rows;");

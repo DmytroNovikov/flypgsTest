@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en-US">
+	<head>
+		<title>Requirements for Pegasus Airlines website</title>
+		<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+		<style>
+			h1 {
+				text-align: center;
+			}
+			table {
+				border-collapse: collapse;
+				width: 100%
+			}
+			tr.header {
+				text-align: center;
+			}
+			table td {
+				border: 1px solid black;
+			}
+			td.col_header_big1 {
+				width: 40%;
+				border: 2px solid black;
+				font-weight: bold;
+			}
+			td.col_header_small1 {
+				width: 20%;
+				border: 2px solid black;
+				font-weight: bold;
+			}
+			td.col_header_big2 {
+				width: 30%;
+				font-weight: bold;
+				border: 2px solid black;
+			}
+			td.col_header_small2 {
+				width: 10%;
+				border: 2px solid black;
+				font-weight: bold;
+			}
+			td.section {
+				text-align: center;
+				font-weight: bold;
+				font-style: italic;
+				background-color: rgb(200, 200, 200);
+			}
+			td.text {
+				text-align: left;
+			}
+			td.link {
+				text-align: center;
+			}
+			td.reqid {
+				text-align: center;
+			}
+			td.reqtext {
+				text-align: left;
+			}
+			td.tc {
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Requirements Traceability Matrix</h1>
+		<br>v.1.0 April 5, 2015
+		<table>
+			<tr class="header">
+				<td colspan="2" class="col_header_big1">Rule</td>
+				<td colspan="2" class="col_header_big1">Requirement</td>
+				<td rowspan="2" class="col_header_small1">Testcase ID</td>
+			</tr>
+			<tr class="header">
+				<td class="col_header_big2">Text</td>
+				<td class="col_header_small2">Link</td>
+				<td class="col_header_small2">ID</td>
+				<td class="col_header_big2">Text</td>
+			</tr>
+
+			<tr>
+				<td colspan="5" class="section">01. Requirements for Online ticket system</td>
+			</tr>
+			<tr>
+				<td rowspan="2" class="text">01. You may purchase or reserve tickets on the internet for up to 9 passengers and 6 flights at a time.</td>
+				<td rowspan="2" class="link"><a href="http://www.flypgs.com/en/information/general-rules.aspx" target="_blank">General Rules</a></td>
+				<td class="reqid">R01_01_01</td>
+				<td class="reqtext">You may purchase or reserve tickets on the internet for up to 9 passengers a time.</td>
+				<td class="tc">&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="reqid">R01_01_02</td>
+				<td class="reqtext">You may purchase or reserve tickets on the internet for up to 6 flights at a time.</td>
+				<td class="tc">&nbsp;</td>
+			</tr>
+
+			<tr>
+				<td class="text">02. Babies that are older than 8 days but less than 3 years of age 18 years and over should be accompanied by parent/adult</td>
+				<td class="link"><a href="http://www.flypgs.com/en/information/general-rules.aspx" target="_blank">General Rules / Baby and Child Passengers</a></td>
+				<td class="reqid">R01_02_01</td>
+				<td class="reqtext">Each Infant should be accompanied by adult </td>
+				<td class="tc">&nbsp;</td>
+			</tr>
+
+			<tr>
+				<td class="text">03. Child passengers older than 3 years but less than 7 years
+					<ul><li>Must not fly unaccompanied</li>
+					<li>18 years and over should be accompanied by parent/adult</li>
+					<li>Must not be accompanied by a flight attendant</li></ul>
+				</td>
+				<td class="link"><a href="http://www.flypgs.com/en/information/general-rules.aspx" target="_blank">General Rules / Baby and Child Passengers</a></td>
+				<td class="reqid">R01_03_01</td>
+				<td class="reqtext">&nbsp;</td>
+				<td class="tc">&nbsp;</td>
+			</tr>
+
+			<tr>
+				<td rowspan="2" class="text">04. Child passengers older than 7 years but less than 13 years
+					<ul><li>Provided the procedure for unaccompanied, 7 - 13 years old of children is followed can fly unaccompanied.</li>
+					<li>They are not allowed to travel on connection flights.</li></ul>
+					Guests who are over 13 but under 18 may travel alone without applying the procedure for Unaccompanied Children. They may not, however, travel accompanied by children under the age of 13.
+				</td>
+				<td rowspan="2" class="link"><a href="http://www.flypgs.com/en/information/general-rules.aspx" target="_blank">General Rules / Baby and Child Passengers</a></td>
+				<td class="reqid">R01_04_01</td>
+				<td class="reqtext">Children are not allowed to travel alone on connection flights.</td>
+				<td class="tc">&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="reqid">R01_04_02</td>
+				<td class="reqtext">Children who are over 13 but under 18 may not travel accompanied by children under the age of 13.</td>
+				<td class="tc">&nbsp;</td>
+			</tr>
+
+		</table>
+	</body>
+</html>

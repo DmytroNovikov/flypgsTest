@@ -19,23 +19,32 @@ public class DatePicker{
     static{
         monthListMap = new HashMap<String, List<String>>();
         monthListMap.put("Türkçe",
-                Arrays.asList("Oca", "?ub", "Mar", "Nis", "May", "Haz", "Tem", "A?u", "Eyl", "Eki", "Kas"));
+                Arrays.asList("Oca", "Şub", "Mar", "Nis", "May", "Haz",
+                        "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"));
         monthListMap.put("English",
-                Arrays.asList("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov"));
+                Arrays.asList("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
         monthListMap.put("Deutsch",
-                Arrays.asList("Jan", "Feb", "Mrz", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov"));
+                Arrays.asList("Jan", "Feb", "Mrz", "Apr", "Mai", "Jun",
+                        "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"));
         monthListMap.put("Français",
-                Arrays.asList("janv.", "f?vr.", "mars", "avr.", "mai", "juin", "juil.", "ao?t", "sept.", "oct.", "nov."));
+                Arrays.asList("janv.", "févr.", "mars", "avr.", "mai", "juin",
+                        "juil.", "août.", "sept.", "oct.", "nov.", "déc."));
         monthListMap.put("Русский",
-                Arrays.asList("янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя"));
+                Arrays.asList("янв", "фев", "мар", "апр", "май", "июн",
+                        "июл", "авг", "сен", "окт", "ноя", "дек"));
         monthListMap.put("Nederlands",
-                Arrays.asList("jan", "feb", "mrt", "apr", "mei", "jun", "jul", "aug", "sep", "okt", "nov"));
+                Arrays.asList("jan", "feb", "mrt", "apr", "mei", "jun",
+                        "jul", "aug", "sep", "okt", "nov", "dec"));
         monthListMap.put("Dansk",
-                Arrays.asList("jan", "feb", "mar", "apr", "maj", "jun", "jul", "aug", "sep", "okt", "nov"));
+                Arrays.asList("jan", "feb", "mar", "apr", "maj", "jun",
+                        "jul", "aug", "sep", "okt", "nov", "dec"));
         monthListMap.put("Italiano",
-                Arrays.asList("gen", "feb", "mar", "apr", "mag", "giu", "lug", "ago", "set", "ott", "nov"));
+                Arrays.asList("gen", "feb", "mar", "apr", "mag", "giu",
+                        "lug", "ago", "set", "ott", "nov", "dic"));
         monthListMap.put("Svenska",
-                Arrays.asList("jan", "feb", "mar", "apr", "maj", "jun", "jul", "aug", "sep", "okt", "nov"));
+                Arrays.asList("jan", "feb", "mar", "apr", "maj", "jun",
+                        "jul", "aug", "sep", "okt", "nov", "dec"));
         monthListMap = Collections.unmodifiableMap(monthListMap);
     }
 
@@ -48,9 +57,19 @@ public class DatePicker{
             calMonth = driver.findElement(By.className("ui-datepicker-month")).getText();
             //Retrieve current selected year name from date picker popup.
             calYear = driver.findElement(By.className("ui-datepicker-year")).getText();
-            //If current selected month and year are same as expected month and year then go Inside this condition.
-            if (getMonthIndex(calMonth, language) == date.getMonthValue()
-                    && date.getYear() == Integer.parseInt(calYear)){
+            if(date.getYear() > Integer.parseInt(calYear)){
+                //Click on next button of date picker.
+                driver.findElement(By.xpath(".//*[@id='ui-datepicker-div']/div/a[2]/span")).click();
+            } else if(date.getYear() < Integer.parseInt(calYear)){
+                //Click on previous button of date picker.
+                driver.findElement(By.xpath(".//*[@id='ui-datepicker-div']/div/a[1]/span")).click();
+            } else if(date.getMonthValue() > getMonthIndex(calMonth, language)){
+                //Click on next button of date picker.
+                driver.findElement(By.xpath(".//*[@id='ui-datepicker-div']/div/a[2]/span")).click();
+            } else if(date.getMonthValue() < getMonthIndex(calMonth, language)){
+                //Click on previous button of date picker.
+                driver.findElement(By.xpath(".//*[@id='ui-datepicker-div']/div/a[1]/span")).click();
+            } else {
                 //Call selectDate function with date to select and set dateNotFound flag to false.
                 WebElement datePicker = driver.findElement(By.id("ui-datepicker-div"));
                 List<WebElement> noOfColumns = datePicker.findElements(By.tagName("td"));
@@ -65,19 +84,7 @@ public class DatePicker{
                 }
                 dateNotFound = false;
             }
-            //If current selected month and year are less than expected month and year then go Inside this condition.
-            else if (getMonthIndex(calMonth, language) < date.getMonthValue()
-                    && (date.getYear() >= Integer.parseInt(calYear))){
-                //Click on next button of date picker.
-                driver.findElement(By.xpath(".//*[@id='ui-datepicker-div']/div/a[2]/span")).click();
-            }
-            //If current selected month and year are greater than expected month and year then go Inside this condition.
-            else if (getMonthIndex(calMonth, language) > date.getMonthValue()
-                    && (date.getYear() <= Integer.parseInt(calYear))){
-                //Click on previous button of date picker.
-                driver.findElement(By.xpath(".//*[@id='ui-datepicker-div']/div/a[1]/span")).click();
-            }
-        }
+       }
     }
 
     private static int getMonthIndex(String month, String language){
